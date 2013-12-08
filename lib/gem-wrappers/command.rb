@@ -22,7 +22,7 @@ class WrappersCommand < Gem::Command
 
   def description # :nodoc:
     <<-DOC
-Show (default) or regenerate environment wrappers for current 'Gem.home'.
+Show (default) or regenerate environment wrappers for current 'GEM_HOME'.
 DOC
   end
 
