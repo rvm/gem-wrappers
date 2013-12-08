@@ -1,0 +1,11 @@
+language: ruby
+rvm:
+  - 2.0.0
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#rvm-test"
+  email:
+    recipients:
+      - mpapis@gmail.com
+    on_failure: change
