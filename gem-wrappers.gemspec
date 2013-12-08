@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 # -*- encoding: utf-8 -*-
 
-require File.expand_path("../lib/gem/wrappers/version.rb", __FILE__)
+require File.expand_path("../lib/gem-wrappers/version.rb", __FILE__)
 
 Gem::Specification.new do |s|
   s.name = "gem-wrappers"
-  s.version = Gem::Wrappers::VERSION
+  s.version = GemWrappers::VERSION
   s.authors = ["Michal Papis"]
   s.email = ["mpapis@gmail.com"]
   s.homepage = "https://github.com/rvm/gem-wrappers"

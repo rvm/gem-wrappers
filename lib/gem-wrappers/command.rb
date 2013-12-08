@@ -1,7 +1,7 @@
 require 'rubygems/command_manager'
 require 'rubygems/installer'
 require 'rubygems/version'
-require 'gem/wrappers/installer'
+require 'gem-wrappers'
 
 class WrappersCommand < Gem::Command
   def initialize
