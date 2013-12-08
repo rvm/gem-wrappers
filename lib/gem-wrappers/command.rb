@@ -5,11 +5,11 @@ require 'gem-wrappers'
 
 class WrappersCommand < Gem::Command
   def initialize
-    super 'regenerate_binstubs', 'Re run generation of executable wrappers for gems.'
+    super 'regenerate_binstubs', 'Re run generation of environment wrappers for gems.'
   end
 
   def arguments # :nodoc:
-    "regenerate        regenerate wrappers for current Gem.home"
+    "regenerate        regenerate environment wrappers for current Gem.home"
   end
 
   def usage # :nodoc:
@@ -39,14 +39,14 @@ DOC
   end
 
   def execute_show
-    puts description
-    puts "   Wrappers path: #{GemWrappers.wrappers_path}"
-    puts "Environment file: #{GemWrappers.environment_file}"
+    $stdout.puts description
+    $stdout.puts "   Wrappers path: #{GemWrappers.wrappers_path}"
+    $stdout.puts "Environment file: #{GemWrappers.environment_file}"
   end
 
   def execute_unknown(subcommand)
     $stderr.puts "Unknown wrapper subcommand: #{subcommand}"
-    puts description
+    $stdout.puts description
     false
   end
 
