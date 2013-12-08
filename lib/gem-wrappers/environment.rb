@@ -4,8 +4,11 @@ module GemWrappers
   class Environment
 
     def self.file
-      Gem.configuration && Gem.configuration[:wrappers_environment_file] ||
-      File.join(Gem.dir, 'environment')
+      path = Gem.configuration && Gem.configuration[:wrappers_environment_file]
+      if path.nil? || path == ""
+        path = File.join(Gem.dir, 'environment')
+      end
+      path
     end
 
     def file
@@ -43,8 +46,8 @@ TEMPLATE
       @gem_home ||= Gem.dir
     end
 
-    def path
-      @path ||= ENV['PATH'].split(":").take(path_take)
+    def path(base = ENV['PATH'])
+      @path ||= base.split(":").take(path_take)
     end
 
   end
