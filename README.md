@@ -8,3 +8,30 @@
 [![Documentation](http://b.repl.ca/v1/yard-docs-blue.png)](http://rubydoc.info/gems/gem-wrappers/frames)
 
 Create gem wrappers for easy use of gems in cron and other system locations.
+
+## Configuration / Defaults
+
+In `~/.gemrc` you can overwrite this defaults:
+
+```ruby
+wrappers_path: GEM_HOME/wrappers
+wrappers_environment_file: GEM_HOME/environment
+wrappers_path_take: 1
+```
+
+## Generating wrappers
+
+By default wrappers are installed when a gem is installed,
+to rerun the process for all gems in `GEM_HOME` use:
+
+```bash
+gem wrappers regenerate
+```
+
+## Showing current configuration
+
+To see paths that are used by gem run:
+
+```bash
+gem wrappers
+```
