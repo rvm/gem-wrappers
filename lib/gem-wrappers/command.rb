@@ -51,14 +51,21 @@ DOC
   end
 
   def execute_regenerate
-    gem_dir_specs = installed_gems.select { |spec|
-      File.exists?( File.join( Gem.dir, 'gems', spec.full_name ) )
-    }
-    executables = gem_dir_specs.map(&:executables).reject(&:nil?).inject(&:+).reject(&:nil?)
-    GemWrappers.install(executables)
+    GemWrappers.install(gem_dir_executables)
   end
 
-  private
+private
+
+  def gem_dir_executables
+    gem_dir_specs.map(&:executables).reject(&:nil?).inject(&:+).reject(&:nil?)
+  end
+
+  def gem_dir_specs
+    installed_gems.select { |spec|
+      File.exists?( File.join( Gem.dir, 'gems', spec.full_name ) )
+    }
+  end
+
   def installed_gems
     if Gem::VERSION > '1.8' then
       Gem::Specification.to_a
