@@ -3,15 +3,13 @@ require 'gem-wrappers/installer'
 
 module GemWrappers
 
-  def self.install(specs)
+  def self.install(executables)
     environment = GemWrappers::Environment.new
     environment.ensure
     wrappers = GemWrappers::Installer.new(environment.file)
     wrappers.ensure
-    specs.each do |spec|
-      spec.executables.each do |executable|
-        wrappers.install(executable)
-      end
+    executables.each do |executable|
+      wrappers.install(executable)
     end
     %w{ruby gem}.each do |executable|
       wrappers.install(executable)

@@ -23,6 +23,7 @@ module GemWrappers
 
     def ensure
       return if File.exist?(file)
+      FileUtils.mkdir_p(File.dirname(file)) unless File.exist?(File.dirname(file))
       content = ERB.new(template).result(binding)
       File.open(file, 'w') do |file|
         file.write(content)

@@ -51,10 +51,11 @@ DOC
   end
 
   def execute_regenerate
-    GemWrappers.install( installed_gems.select { |spec|
-      # regenerate only gems in Gem.dir
+    gem_dir_specs = installed_gems.select { |spec|
       File.exists?( File.join( Gem.dir, 'gems', spec.full_name ) )
-    } )
+    }
+    executables = gem_dir_specs.map(&:executables).reject(&:nil?).inject(&:+).reject(&:nil?)
+    GemWrappers.install(executables)
   end
 
   private

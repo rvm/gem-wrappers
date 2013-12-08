@@ -12,7 +12,7 @@ if
   require 'gem-wrappers/command'
 
   Gem.post_install do |installer|
-    GemWrappers.install([installer.spec])
+    GemWrappers.install(installer.spec.executables)
   end
   Gem::CommandManager.instance.register_command :wrappers
 end
