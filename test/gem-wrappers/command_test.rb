@@ -1,6 +1,6 @@
 require 'test_helper'
 require 'tempfile'
-require 'gem-wrappers/environment'
+require 'gem-wrappers/command'
 
 describe WrappersCommand do
   subject do
