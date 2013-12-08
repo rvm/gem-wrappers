@@ -19,6 +19,9 @@ wrappers_environment_file: GEM_HOME/environment
 wrappers_path_take: 1
 ```
 
+It is not yet possible to put variables in the configuration,
+only relative and full paths will work, open a ticket if you need variables.
+
 ## Generating wrappers
 
 By default wrappers are installed when a gem is installed,
@@ -34,4 +37,21 @@ To see paths that are used by gem run:
 
 ```bash
 gem wrappers
+```
+
+## Environment file
+
+User can provide his own `environment` file,
+in case it is not available during generating wrappers it will be created using this template:
+
+```erb
+export PATH="<%= path.join(":") %>:$PATH"
+export GEM_PATH="<%= gem_path.join(":") %>"
+export GEM_HOME="<%= gem_home %>"
+```
+
+The path elements are calculated using this algorithm:
+
+```ruby
+ENV['PATH'].split(":").take(Gem.path.size + path_take)
 ```
