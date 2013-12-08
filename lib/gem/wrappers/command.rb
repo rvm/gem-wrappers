@@ -49,12 +49,10 @@ DOC
   end
 
   def execute_regenerate
-    Gem::Wrappes::Environment.new.ensure
-    installed_gems.each do |spec|
-      if File.exists?( File.join( Gem.dir, 'gems', spec.full_name ) ) && !spec.executables.empty?
-        Gem::Wrappers::Installer.new(spec.executables).install
-      end
-    end
+    Gem::Wrappes.install( installed_gems.select { |spec|
+      # regenerate only gems in Gem.dir
+      File.exists?( File.join( Gem.dir, 'gems', spec.full_name ) )
+    } )
   end
 
   private

@@ -14,15 +14,15 @@ module Gem
 
       def ensure
         return if File.exist?(file)
-        content = ERB.new(self.class.template).result(binding)
+        content = ERB.new(template).result(binding)
         File.open(file, 'w') do |file|
           file.write(content)
         end
         File.chmod(0644, file)
       end
 
-      def self.template
-        @file_template ||= <<-TEMPLATE
+      def template
+        @template ||= <<-TEMPLATE
 export PATH="<%= path.join(":") %>:$PATH"
 export GEM_PATH="<%= gem_path.join(":") %>"
 export GEM_HOME="<%= gem_home %>"
