@@ -1,7 +1,7 @@
 module GemWrappers
   module Specification
     def self.find
-      @executable_hooks_spec ||=
+      @gem_wrappers_spec ||=
         if Gem::Specification.respond_to?(:find_by_name)
           Gem::Specification.find_by_name("gem-wrappers")
         else
