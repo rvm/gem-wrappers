@@ -8,10 +8,13 @@ module GemWrappers
       @environment_file = environment_file
     end
 
+    def self.wrappers_path
+      Gem.configuration && Gem.configuration[:wrappers_path] ||
+      File.join(Gem.dir, 'wrappers')
+    end
+
     def wrappers_path
-      @wrappers_path ||=
-        Gem.configuration && Gem.configuration[:wrappers_path] ||
-        File.join(Gem.dir, 'wrappers')
+      @wrappers_path ||= self.class.wrappers_path
     end
 
     def ensure

@@ -3,12 +3,19 @@ require 'erb'
 module GemWrappers
   class Environment
 
+    def self.file
+      Gem.configuration && Gem.configuration[:wrappers_environment_file] ||
+      File.join(Gem.dir, 'environment')
+    end
+
     def file
-      @file ||= Gem.configuration && Gem.configuration[:wrappers_environment_file] || File.join(Gem.dir, 'environment')
+      @file ||= self.class.file
     end
 
     def path_take
-      @path_take ||= Gem.configuration && Gem.configuration[:wrappers_path_take] || 4
+      return @path_take if @path_take
+      @path_take = Gem.configuration && Gem.configuration[:wrappers_path_take] || 1
+      @path_take += gem_path.size
     end
 
     def ensure

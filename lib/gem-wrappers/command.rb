@@ -40,8 +40,8 @@ DOC
 
   def execute_show
     puts description
-    puts "   Wrappers path: #{GemWrappers::Installer.new(nil).wrappers_path}"
-    puts "Environment file: #{GemWrappers::Environment.new.file}"
+    puts "   Wrappers path: #{GemWrappers.wrappers_path}"
+    puts "Environment file: #{GemWrappers.environment_file}"
   end
 
   def execute_unknown(subcommand)
