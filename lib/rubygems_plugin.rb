@@ -12,7 +12,8 @@ if
   require File.expand_path('../gem/wrappers/command.rb', __FILE__)
 
   Gem.post_install do |installer|
-    Gem::Wrappes::Installer.new(installer).install
+    Gem::Wrappes::Environment.new.ensure
+    Gem::Wrappes::Installer.new(installer.spec.executables).install
   end
   Gem::CommandManager.instance.register_command :wrappers
 end

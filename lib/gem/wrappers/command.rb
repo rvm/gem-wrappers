@@ -49,19 +49,10 @@ DOC
   end
 
   def execute_regenerate
+    Gem::Wrappes::Environment.new.ensure
     installed_gems.each do |spec|
-      unless spec.executables.empty?
-        org_gem_path = Gem.path.find{|path|
-          File.exists? File.join path, 'gems', spec.full_name
-        } || Gem.dir
-        cache_gem = File.join(org_gem_path, 'cache', spec.file_name)
-        if File.exist? cache_gem
-          puts "#{spec.name} #{spec.version}" # TODO: if verbose || unless quiet
-          installer = Gem::Installer.new Dir[cache_gem].first, :wrappers => true, :force => true, :install_dir => org_gem_path
-          Gem::Wrappers::Installer.new(installer).install
-        else
-          $stderr.puts "##{spec.name} #{spec.version} not found in GEM_PATH"
-        end
+      if File.exists?( File.join( Gem.dir, 'gems', spec.full_name ) ) && !spec.executables.empty?
+        Gem::Wrappers::Installer.new(spec.executables).install
       end
     end
   end
