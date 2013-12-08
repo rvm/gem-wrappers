@@ -39,7 +39,9 @@ DOC
   end
 
   def execute_show
-    puts "Wrappers path: #{Gem::Wrappers::Installer.wrappers_path}"
+    puts description
+    puts "   Wrappers path: #{GemWrappers::Installer.new(nil).wrappers_path}"
+    puts "Environment file: #{GemWrappers::Environment.new.file}"
   end
 
   def execute_unknown(subcommand)
@@ -49,7 +51,7 @@ DOC
   end
 
   def execute_regenerate
-    Gem::Wrappes.install( installed_gems.select { |spec|
+    GemWrappers.install( installed_gems.select { |spec|
       # regenerate only gems in Gem.dir
       File.exists?( File.join( Gem.dir, 'gems', spec.full_name ) )
     } )
