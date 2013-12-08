@@ -57,7 +57,7 @@ DOC
 private
 
   def gem_dir_executables
-    gem_dir_specs_executables.inject(&:+).reject(&:nil?)
+    @gem_dir_executables ||= gem_dir_specs_executables.inject(&:+).reject(&:nil?)
   end
 
   def gem_dir_specs_executables

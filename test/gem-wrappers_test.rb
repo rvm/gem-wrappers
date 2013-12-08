@@ -37,6 +37,7 @@ describe GemWrappers do
     File.exist?(File.join(@test_path, "wrappers", "rake")).must_equal(true)
     File.exist?(File.join(@test_path, "wrappers", "ruby")).must_equal(true)
     File.exist?(File.join(@test_path, "wrappers", "test")).must_equal(true)
+    File.exist?(File.join(@test_path, "wrappers", "other")).must_equal(false)
   end
 
 end
