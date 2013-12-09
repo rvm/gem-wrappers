@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/rvm/gem-wrappers"
   s.summary = "Create gem wrappers for easy use of gems in cron and other system locations."
   s.license = "Apache 2.0"
+  s.extensions  = %w( ext/wrapper_generator/extconf.rb )
   s.files = `git ls-files`.split("\n")
   s.test_files = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.required_ruby_version = ">= 2.0.0"
