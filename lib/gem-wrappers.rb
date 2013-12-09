@@ -8,10 +8,14 @@ module GemWrappers
     environment.ensure
     wrappers = GemWrappers::Installer.new(environment.file)
     wrappers.ensure
+
+    # gem executables
     executables.each do |executable|
       wrappers.install(executable)
     end
-    %w{ruby gem}.each do |executable|
+
+    # ruby executables
+    %w{ruby gem erb irb}.each do |executable|
       wrappers.install(executable)
     end
   end
