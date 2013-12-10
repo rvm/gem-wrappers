@@ -67,7 +67,7 @@ EXPECTED
       Gem.configuration[:wrappers_environment_file] = File.join(@test_path, "environment")
       Gem.configuration[:wrappers_path] =             File.join(@test_path, "wrappers")
 
-      subject.instance_variable_set(:@gem_dir_executables, %w{rake})
+      subject.instance_variable_set(:@executables, %w{rake})
       subject.options[:args] = ['regenerate']
       subject.execute
 
@@ -86,7 +86,7 @@ EXPECTED
   end
 
   it "finds gem executables" do
-    subject.send(:gem_dir_executables).must_include('coveralls')
+    subject.send(:executables).must_include('coveralls')
   end
 
 end
