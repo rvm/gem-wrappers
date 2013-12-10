@@ -12,6 +12,7 @@ File.open('nmake.bat', 'w') { |f| }
 $: << File.expand_path("../../../lib", __FILE__)
 
 # load the command
+require 'rubygems'
 require 'gem-wrappers/command'
 
 # call the actions

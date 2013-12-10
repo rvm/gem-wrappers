@@ -6,13 +6,13 @@ describe GemWrappers::Environment do
   describe "configuration" do
     it "uses default file" do
       Gem.configuration[:wrappers_environment_file] = nil
-      GemWrappers::Environment.file.must_equal(File.join(Gem.dir, "environment"))
-      GemWrappers::Environment.new.file.must_equal(GemWrappers::Environment.file)
+      GemWrappers::Environment.file_name.must_equal(File.join(Gem.dir, "environment"))
+      GemWrappers::Environment.new.file_name.must_equal(GemWrappers::Environment.file_name)
     end
     it "reads configured file" do
       Gem.configuration[:wrappers_environment_file] = "/path/to/environment"
-      GemWrappers::Environment.file.must_equal("/path/to/environment")
-      GemWrappers::Environment.new.file.must_equal("/path/to/environment")
+      GemWrappers::Environment.file_name.must_equal("/path/to/environment")
+      GemWrappers::Environment.new.file_name.must_equal("/path/to/environment")
       Gem.configuration[:wrappers_environment_file] = nil
     end
     it "uses default take" do
@@ -51,12 +51,12 @@ describe GemWrappers::Environment do
     end
 
     it "does not overwrite existing file" do
-      subject.instance_variable_set(:@file, @test_file.path)
-      File.open(subject.file, "w") do |file|
+      subject.instance_variable_set(:@file_name, @test_file.path)
+      File.open(subject.file_name, "w") do |file|
         file.write("something")
       end
       subject.ensure
-      File.open(subject.file, "r") do |file|
+      File.open(subject.file_name, "r") do |file|
         file.read.must_equal("something")
       end
     end
@@ -65,11 +65,11 @@ describe GemWrappers::Environment do
       subject.instance_variable_set(:@path, ["/one/bin", "/two/bin"])
       subject.instance_variable_set(:@gem_path, ["/one", "/two"])
       subject.instance_variable_set(:@gem_home, "/one")
-      subject.instance_variable_set(:@file, @test_file.path)
+      subject.instance_variable_set(:@file_name, @test_file.path)
       @test_file.close
       @test_file.unlink
       subject.ensure
-      File.open(subject.file, "r") do |file|
+      File.open(subject.file_name, "r") do |file|
         file.read.must_equal(<<-EXPECTED)
 export PATH="/one/bin:/two/bin:$PATH"
 export GEM_PATH="/one:/two"

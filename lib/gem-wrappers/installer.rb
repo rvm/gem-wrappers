@@ -25,11 +25,11 @@ module GemWrappers
 
     def install(executable)
       content = ERB.new(template).result(binding)
-      file = File.join(wrappers_path, executable)
-      File.open(file, 'w') do |file|
+      file_name = File.join(wrappers_path, executable)
+      File.open(file_name, 'w') do |file|
         file.write(content)
       end
-      File.chmod(0755, file)
+      File.chmod(0755, file_name)
     end
 
     def template

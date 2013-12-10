@@ -6,7 +6,7 @@ module GemWrappers
   def self.install(executables)
     environment = GemWrappers::Environment.new
     environment.ensure
-    wrappers = GemWrappers::Installer.new(environment.file)
+    wrappers = GemWrappers::Installer.new(environment.file_name)
     wrappers.ensure
 
     # gem executables
@@ -25,7 +25,7 @@ module GemWrappers
   end
 
   def self.environment_file
-    GemWrappers::Environment.file
+    GemWrappers::Environment.file_name
   end
 
 end

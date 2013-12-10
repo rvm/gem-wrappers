@@ -3,7 +3,7 @@ require 'erb'
 module GemWrappers
   class Environment
 
-    def self.file
+    def self.file_name
       path = Gem.configuration && Gem.configuration[:wrappers_environment_file]
       if path.nil? || path == ""
         path = File.join(Gem.dir, 'environment')
@@ -11,8 +11,8 @@ module GemWrappers
       path
     end
 
-    def file
-      @file ||= self.class.file
+    def file_name
+      @file_name ||= self.class.file_name
     end
 
     def path_take
@@ -22,13 +22,13 @@ module GemWrappers
     end
 
     def ensure
-      return if File.exist?(file)
-      FileUtils.mkdir_p(File.dirname(file)) unless File.exist?(File.dirname(file))
+      return if File.exist?(file_name)
+      FileUtils.mkdir_p(File.dirname(file_name)) unless File.exist?(File.dirname(file_name))
       content = ERB.new(template).result(binding)
-      File.open(file, 'w') do |file|
+      File.open(file_name, 'w') do |file|
         file.write(content)
       end
-      File.chmod(0644, file)
+      File.chmod(0644, file_name)
     end
 
     def template
