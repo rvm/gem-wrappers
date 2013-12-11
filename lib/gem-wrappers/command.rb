@@ -57,7 +57,7 @@ DOC
 private
 
   def executables
-    @executables ||= installed_gems.map(&:executables).inject(&:+)
+    @executables ||= installed_gems.map(&:executables).inject(&:+) || []
   end
 
   def installed_gems
