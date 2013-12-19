@@ -57,7 +57,8 @@ DOC
 private
 
   def executables
-    @executables ||= installed_gems.map(&:executables).inject(&:+) || []
+    # do not use map(&:...) - for ruby 1.8.6 compatibility
+    @executables ||= installed_gems.map{|gem| gem.executables }.inject{|sum, n| sum + n } || []
   end
 
   def installed_gems
