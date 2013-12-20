@@ -4,7 +4,7 @@ module GemWrappers
   class Installer
     attr_reader :environment_file
 
-    def initialize(environment_file)
+    def initialize(environment_file = nil)
       @environment_file = environment_file
     end
 
@@ -23,7 +23,13 @@ module GemWrappers
       raise Gem::FilePermissionError.new(wrappers_path) unless File.writable?(wrappers_path)
     end
 
+    def uninstall(executable)
+      file_name = File.join(wrappers_path, executable)
+      File.delete(file_name) if File.exist?(file_name)
+    end
+
     def install(executable)
+      raise "Missing environment file for initialize!" unless @environment_file
       content = ERB.new(template).result(binding)
       file_name = File.join(wrappers_path, executable)
       File.open(file_name, 'w') do |file|

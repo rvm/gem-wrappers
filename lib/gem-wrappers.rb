@@ -6,17 +6,26 @@ module GemWrappers
   def self.install(executables)
     environment = GemWrappers::Environment.new
     environment.ensure
-    wrappers = GemWrappers::Installer.new(environment.file_name)
-    wrappers.ensure
+    installer = GemWrappers::Installer.new(environment.file_name)
+    installer.ensure
 
     # gem executables
     executables.each do |executable|
-      wrappers.install(executable)
+      installer.install(executable)
     end
 
     # ruby executables
     %w{ruby gem erb irb}.each do |executable|
-      wrappers.install(executable)
+      installer.install(executable)
+    end
+  end
+
+  def self.uninstall(executables)
+    installer = GemWrappers::Installer.new
+
+    # gem executables
+    executables.each do |executable|
+      installer.uninstall(executable)
     end
   end
 

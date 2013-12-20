@@ -40,4 +40,14 @@ describe GemWrappers do
     File.exist?(File.join(@test_path, "wrappers", "other")).must_equal(false)
   end
 
+  it "does remove wrapper" do
+    Gem.configuration[:wrappers_path] = File.join(@test_path, "wrappers")
+    Gem.configuration[:wrappers_environment_file] = File.join(@test_path, "environment")
+    Gem.configuration[:wrappers_path_take] = 0
+    GemWrappers.install(%w{rake})
+    File.exist?(File.join(@test_path, "wrappers", "rake")).must_equal(true)
+    GemWrappers.uninstall(%w{rake})
+    File.exist?(File.join(@test_path, "wrappers", "rake")).must_equal(false)
+  end
+
 end

@@ -63,5 +63,17 @@ EXPECTED
       end
     end
 
+    it "removes wrapper" do
+      subject.instance_variable_set(:@wrappers_path, @test_path)
+      full_path = File.join(subject.wrappers_path, "rake")
+      subject.ensure
+      File.open(full_path, "w") do |file|
+        file.puts "empty"
+      end
+      File.exist?(full_path).must_equal(true)
+      subject.uninstall("rake")
+      File.exist?(full_path).must_equal(false)
+    end
+
   end
 end

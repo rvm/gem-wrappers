@@ -14,5 +14,10 @@ if
   Gem.post_install do |installer|
     GemWrappers.install(installer.spec.executables)
   end
+
+  Gem.post_uninstall do |installer|
+    GemWrappers.uninstall(installer.spec.executables)
+  end
+
   Gem::CommandManager.instance.register_command :wrappers
 end
