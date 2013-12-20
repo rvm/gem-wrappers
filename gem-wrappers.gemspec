@@ -14,8 +14,7 @@ Gem::Specification.new do |s|
   s.extensions  = %w( ext/wrapper_generator/extconf.rb )
   s.files = `git ls-files`.split("\n")
   s.test_files = `git ls-files -- {test,spec,features}/*`.split("\n")
-  %w{rake minitest simplecov coveralls redcarpet}.each do |name|
-    s.add_development_dependency(name)
-  end
+  s.add_development_dependency("rake")
+  s.add_development_dependency("minitest")
   # s.add_development_dependency("smf-gem")
 end

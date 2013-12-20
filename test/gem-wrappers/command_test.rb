@@ -86,7 +86,7 @@ EXPECTED
   end
 
   it "finds gem executables" do
-    subject.send(:executables).must_include('coveralls')
+    subject.send(:executables).must_include('rake')
   end
 
 end
