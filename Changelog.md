@@ -1,5 +1,10 @@
 # Changelog
 
+## next
+date: 2013-12-20
+
+- Improved gems searching and tests
+
 ## 1.1.0
 date: 2013-12-20
 

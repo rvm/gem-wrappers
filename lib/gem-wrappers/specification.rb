@@ -8,8 +8,8 @@ module GemWrappers
       end
     end
 
-    def self.find
-      @gem_wrappers_spec ||= installed_gems.find{|spec| spec.name == "gem-wrappers" }
+    def self.find(name = "gem-wrappers")
+      @gem_wrappers_spec ||= installed_gems.find{|spec| spec.name == name }
     end
 
     def self.version
