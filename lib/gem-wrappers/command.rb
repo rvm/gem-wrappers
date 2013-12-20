@@ -2,6 +2,7 @@ require 'rubygems/command_manager'
 require 'rubygems/installer'
 require 'rubygems/version'
 require 'gem-wrappers'
+require 'gem-wrappers/specification'
 
 class WrappersCommand < Gem::Command
   def initialize
@@ -58,14 +59,6 @@ private
 
   def executables
     # do not use map(&:...) - for ruby 1.8.6 compatibility
-    @executables ||= installed_gems.map{|gem| gem.executables }.inject{|sum, n| sum + n } || []
-  end
-
-  def installed_gems
-    if Gem::VERSION > '1.8' then
-      Gem::Specification.to_a
-    else
-      Gem.source_index.map{|name,spec| spec}
-    end
+    @executables ||= GemWrappers::Specification.installed_gems.map{|gem| gem.executables }.inject{|sum, n| sum + n } || []
   end
 end
