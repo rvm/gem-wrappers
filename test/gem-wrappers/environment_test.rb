@@ -37,7 +37,7 @@ describe GemWrappers::Environment do
 
     after do
       @test_file.close
-      @test_file.unlink
+      @test_file.unlink if File.exist?(@test_file.path)
     end
 
     it "calculates path part 1" do
