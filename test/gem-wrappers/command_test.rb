@@ -2,12 +2,27 @@ require 'test_helper'
 require 'tempfile'
 require 'gem-wrappers/command'
 
+class WrappersCommand
+  class FakeInstaller
+    def self.reset
+      @executables = []
+    end
+    def self.install(executables)
+      @executables += executables
+    end
+    def self.executables
+      @executables
+    end
+  end
+end
+
 describe WrappersCommand do
   subject do
     WrappersCommand.new
   end
 
   before do
+    WrappersCommand::FakeInstaller.reset
     $stdout = StringIO.new
     $stderr = StringIO.new
   end
@@ -50,60 +65,38 @@ Environment file: /path/to/environment
 EXPECTED
   end
 
+  it "regenerates wrappers" do
+    subject.instance_variable_set(:@executables, %w{rake})
+    subject.instance_variable_set(:@installer, WrappersCommand::FakeInstaller)
+    subject.options[:args] = ['regenerate']
+    subject.execute
+    WrappersCommand::FakeInstaller.executables.must_equal(%w{rake})
+  end
 
-  describe "wrappers" do
+  describe "script wrappers" do
     before do
-      file = Tempfile.new('command-wrappers')
-      @test_path = file.path
-      file.close
-      file.unlink
+      @file = Tempfile.new('command-wrappers')
     end
 
     after do
-      FileUtils.rm_rf(@test_path)
+      @file.close
+      @file.unlink
     end
 
-    it "regenerates wrappers" do
-      Gem.configuration[:wrappers_environment_file] = File.join(@test_path, "environment")
-      Gem.configuration[:wrappers_path] =             File.join(@test_path, "wrappers")
-
-      subject.instance_variable_set(:@executables, %w{rake})
-      subject.options[:args] = ['regenerate']
+    it "generates script wrapper full path" do
+      subject.instance_variable_set(:@installer, WrappersCommand::FakeInstaller)
+      subject.options[:args] = [@file.path]
       subject.execute
-
-      Gem.configuration[:wrappers_environment_file] = nil
-      Gem.configuration[:wrappers_path] = nil
-
-      File.exist?(File.join(@test_path, "environment")).must_equal(true)
-      File.exist?(File.join(@test_path, "wrappers", "gem")).must_equal(true)
-      File.exist?(File.join(@test_path, "wrappers", "rake")).must_equal(true)
-      File.exist?(File.join(@test_path, "wrappers", "ruby")).must_equal(true)
-      File.exist?(File.join(@test_path, "wrappers", "test")).must_equal(false)
-
-      $stderr.string.must_equal("")
-      $stdout.string.must_equal("")
+      WrappersCommand::FakeInstaller.executables.must_equal([@file.path])
     end
 
-    it "generates script wrapper" do
-      FileUtils.mkdir_p(@test_path)
-      test_file = File.join(@test_path, "test_file.sh")
-      File.open(test_file, "w") do |file|
-        file.puts "echo test"
+    it "generates script wrapper relative" do
+      Dir.chdir(File.dirname(@file.path)) do
+        subject.instance_variable_set(:@installer, WrappersCommand::FakeInstaller)
+        subject.options[:args] = [File.basename(@file.path)]
+        subject.execute
+        WrappersCommand::FakeInstaller.executables.must_equal([@file.path])
       end
-      Gem.configuration[:wrappers_environment_file] = File.join(@test_path, "environment")
-      Gem.configuration[:wrappers_path] =             File.join(@test_path, "wrappers")
-
-      subject.options[:args] = [test_file]
-      subject.execute
-
-      Gem.configuration[:wrappers_environment_file] = nil
-      Gem.configuration[:wrappers_path] = nil
-
-      File.exist?(File.join(@test_path, "environment")).must_equal(true)
-      File.exist?(File.join(@test_path, "wrappers", "test_file.sh")).must_equal(true)
-
-      $stderr.string.must_equal("")
-      $stdout.string.must_equal("")
     end
   end
 

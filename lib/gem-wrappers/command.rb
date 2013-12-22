@@ -35,7 +35,7 @@ DOC
     when 'regenerate'
       execute_regenerate
     when FileExist
-      execute_regenerate([File.expand_path(subcommand)]) # TODO: File.expand_path not tested!
+      execute_regenerate([File.expand_path(subcommand)])
     else
       execute_unknown subcommand
     end
@@ -54,10 +54,14 @@ DOC
   end
 
   def execute_regenerate(list = executables)
-    GemWrappers.install(list)
+    installer.install(list)
   end
 
 private
+
+  def installer
+    @installer ||= GemWrappers
+  end
 
   def executables
     # do not use map(&:...) - for ruby 1.8.6 compatibility

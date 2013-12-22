@@ -1,5 +1,10 @@
 # Changelog
 
+## next
+date: 2013-12-22
+
+- simplify tests for command, add test for detecting full script path
+
 ## 1.2.1
 date: 2013-12-22
 
