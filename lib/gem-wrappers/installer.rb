@@ -30,12 +30,20 @@ module GemWrappers
 
     def install(executable)
       raise "Missing environment file for initialize!" unless @environment_file
+      @executable = executable
       content = ERB.new(template).result(binding)
-      file_name = File.join(wrappers_path, executable)
+      file_name = File.join(wrappers_path, File.basename(executable))
       File.open(file_name, 'w') do |file|
         file.write(content)
       end
       File.chmod(0755, file_name)
+    end
+
+    def executable_expanded
+      if File.extname(@executable) == ".rb"
+      then "ruby #{@executable}"
+      else @executable
+      end
     end
 
     def template
@@ -46,7 +54,7 @@ if
   [[ -s "<%= environment_file %>" ]]
 then
   source "<%= environment_file %>"
-  exec <%= executable %> "$@"
+  exec <%= executable_expanded %> "$@"
 else
   echo "ERROR: Missing RVM environment file: '<%= environment_file %>'" >&2
   exit 1

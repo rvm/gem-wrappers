@@ -83,6 +83,28 @@ EXPECTED
       $stderr.string.must_equal("")
       $stdout.string.must_equal("")
     end
+
+    it "generates script wrapper" do
+      Dir.mkdir(@test_path)
+      test_file = File.join(@test_path, "test_file.sh")
+      File.open(test_file, "w") do |file|
+        file.puts "echo test"
+      end
+      Gem.configuration[:wrappers_environment_file] = File.join(@test_path, "environment")
+      Gem.configuration[:wrappers_path] =             File.join(@test_path, "wrappers")
+
+      subject.options[:args] = [test_file]
+      subject.execute
+
+      Gem.configuration[:wrappers_environment_file] = nil
+      Gem.configuration[:wrappers_path] = nil
+
+      File.exist?(File.join(@test_path, "environment")).must_equal(true)
+      File.exist?(File.join(@test_path, "wrappers", "test.sh")).must_equal(true)
+
+      $stderr.string.must_equal("")
+      $stdout.string.must_equal("")
+    end
   end
 
   it "finds gem executables" do

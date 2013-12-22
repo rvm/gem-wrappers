@@ -33,6 +33,16 @@ describe GemWrappers::Installer do
       FileUtils.rm_rf(@test_path)
     end
 
+    it "doe not prefix for .sh scripts" do
+      subject.instance_variable_set(:@executable, "/path/to/test.sh")
+      subject.executable_expanded.must_equal("/path/to/test.sh")
+    end
+
+    it "adds ruby prefix for .rb scripts" do
+      subject.instance_variable_set(:@executable, "/path/to/test.rb")
+      subject.executable_expanded.must_equal("ruby /path/to/test.rb")
+    end
+
     it "does create target dir" do
       subject.instance_variable_set(:@wrappers_path, @test_path)
       File.exist?(subject.wrappers_path).must_equal(false)
@@ -55,6 +65,62 @@ if
 then
   source "/path/to/environment"
   exec rake "$@"
+else
+  echo "ERROR: Missing RVM environment file: '/path/to/environment'" >&2
+  exit 1
+fi
+EXPECTED
+      end
+    end
+
+    it "creates shell script wrapper" do
+      subject.instance_variable_set(:@wrappers_path, @test_path)
+      script_path = File.join(subject.wrappers_path, "example", "test.sh")
+      Dir.mkdir(File.join(subject.wrappers_path, "example"))
+      File.open(script_path, "w") do |file|
+        file.write("echo test")
+      end
+      full_path = File.join(subject.wrappers_path, "test.sh")
+      File.exist?(full_path).must_equal(false)
+      subject.ensure
+      subject.install(script_path)
+      File.open(full_path, "r") do |file|
+        file.read.must_equal(<<-EXPECTED)
+#!/usr/bin/env bash
+
+if
+  [[ -s "/path/to/environment" ]]
+then
+  source "/path/to/environment"
+  exec #{script_path} "$@"
+else
+  echo "ERROR: Missing RVM environment file: '/path/to/environment'" >&2
+  exit 1
+fi
+EXPECTED
+      end
+    end
+
+    it "creates ruby script wrapper" do
+      subject.instance_variable_set(:@wrappers_path, @test_path)
+      script_path = File.join(subject.wrappers_path, "example", "test.rb")
+      Dir.mkdir(File.join(subject.wrappers_path, "example"))
+      File.open(script_path, "w") do |file|
+        file.write("puts :test")
+      end
+      full_path = File.join(subject.wrappers_path, "test.rb")
+      File.exist?(full_path).must_equal(false)
+      subject.ensure
+      subject.install(script_path)
+      File.open(full_path, "r") do |file|
+        file.read.must_equal(<<-EXPECTED)
+#!/usr/bin/env bash
+
+if
+  [[ -s "/path/to/environment" ]]
+then
+  source "/path/to/environment"
+  exec ruby #{script_path} "$@"
 else
   echo "ERROR: Missing RVM environment file: '/path/to/environment'" >&2
   exit 1

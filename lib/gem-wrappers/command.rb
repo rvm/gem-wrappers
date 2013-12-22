@@ -34,6 +34,8 @@ DOC
       execute_show
     when 'regenerate'
       execute_regenerate
+    when FileExist
+      execute_regenerate([File.realpath(subcommand)]) # TODO: File.realpath not tested!
     else
       execute_unknown subcommand
     end
@@ -51,8 +53,8 @@ DOC
     false
   end
 
-  def execute_regenerate
-    GemWrappers.install(executables)
+  def execute_regenerate(list = executables)
+    GemWrappers.install(list)
   end
 
 private
@@ -62,3 +64,5 @@ private
     @executables ||= GemWrappers::Specification.installed_gems.map{|gem| gem.executables }.inject{|sum, n| sum + n } || []
   end
 end
+
+require 'gem-wrappers/command/file_exist'
