@@ -15,7 +15,7 @@ module GemWrappers
     end
 
     # ruby executables
-    %w{ruby gem erb irb}.each do |executable|
+    %w{ruby gem erb irb ri rdoc testrb}.each do |executable|
       installer.install(executable)
     end
   end
