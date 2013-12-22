@@ -85,7 +85,7 @@ EXPECTED
     end
 
     it "generates script wrapper" do
-      Dir.mkdir(@test_path)
+      FileUtils.mkdir_p(@test_path)
       test_file = File.join(@test_path, "test_file.sh")
       File.open(test_file, "w") do |file|
         file.puts "echo test"
@@ -100,7 +100,7 @@ EXPECTED
       Gem.configuration[:wrappers_path] = nil
 
       File.exist?(File.join(@test_path, "environment")).must_equal(true)
-      File.exist?(File.join(@test_path, "wrappers", "test.sh")).must_equal(true)
+      File.exist?(File.join(@test_path, "wrappers", "test_file.sh")).must_equal(true)
 
       $stderr.string.must_equal("")
       $stdout.string.must_equal("")

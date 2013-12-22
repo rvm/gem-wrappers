@@ -76,7 +76,7 @@ EXPECTED
     it "creates shell script wrapper" do
       subject.instance_variable_set(:@wrappers_path, @test_path)
       script_path = File.join(subject.wrappers_path, "example", "test.sh")
-      Dir.mkdir(File.join(subject.wrappers_path, "example"))
+      FileUtils.mkdir_p(File.join(subject.wrappers_path, "example"))
       File.open(script_path, "w") do |file|
         file.write("echo test")
       end
@@ -104,7 +104,7 @@ EXPECTED
     it "creates ruby script wrapper" do
       subject.instance_variable_set(:@wrappers_path, @test_path)
       script_path = File.join(subject.wrappers_path, "example", "test.rb")
-      Dir.mkdir(File.join(subject.wrappers_path, "example"))
+      FileUtils.mkdir_p(File.join(subject.wrappers_path, "example"))
       File.open(script_path, "w") do |file|
         file.write("puts :test")
       end
