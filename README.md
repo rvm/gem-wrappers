@@ -31,6 +31,18 @@ to rerun the process for all gems in `GEM_HOME` use:
 gem wrappers regenerate
 ```
 
+wrappers will be generated in `$GEM_HOME/wrappers/`.
+
+## Generating scripts wrappers
+
+It is possible to generate wrappers for custom scripts:
+
+```bash
+gem wrappers /path/to/script
+```
+
+a wrapper `$GEM_HOME/wrappers/script` will be generated.
+
 ## Showing current configuration
 
 To see paths that are used by gem run:
