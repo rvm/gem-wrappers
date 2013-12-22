@@ -35,7 +35,7 @@ DOC
     when 'regenerate'
       execute_regenerate
     when FileExist
-      execute_regenerate([File.realpath(subcommand)]) # TODO: File.realpath not tested!
+      execute_regenerate([File.expand_path(subcommand)]) # TODO: File.expand_path not tested!
     else
       execute_unknown subcommand
     end
