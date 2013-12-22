@@ -1,7 +1,12 @@
 # Changelog
 
+## 1.2.1
+date: 2013-12-22
+
+- Add `ri`, `rdoc` and `testrb` to the list of default ruby executables
+
 ## 1.2.0
-date: 2013-12-20
+date: 2013-12-22
 
 - Add support for generating scripts wrappers
 - Improved gems searching and tests
