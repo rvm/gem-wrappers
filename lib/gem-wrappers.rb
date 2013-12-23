@@ -3,10 +3,16 @@ require 'gem-wrappers/installer'
 
 module GemWrappers
 
+  def self.environment
+    @environment ||= GemWrappers::Environment.new
+  end
+
+  def self.installer
+    @installer ||= GemWrappers::Installer.new(@environment.file_name)
+  end
+
   def self.install(executables)
-    environment = GemWrappers::Environment.new
     environment.ensure
-    installer = GemWrappers::Installer.new(environment.file_name)
     installer.ensure
 
     # gem executables
@@ -21,8 +27,6 @@ module GemWrappers
   end
 
   def self.uninstall(executables)
-    installer = GemWrappers::Installer.new
-
     # gem executables
     executables.each do |executable|
       installer.uninstall(executable)
@@ -30,11 +34,11 @@ module GemWrappers
   end
 
   def self.wrappers_path
-    GemWrappers::Installer.wrappers_path
+    installer.wrappers_path
   end
 
   def self.environment_file
-    GemWrappers::Environment.file_name
+    environment.file_name
   end
 
 end

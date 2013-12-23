@@ -43,8 +43,8 @@ DOC
 
   def execute_show
     $stdout.puts description
-    $stdout.puts "   Wrappers path: #{GemWrappers.wrappers_path}"
-    $stdout.puts "Environment file: #{GemWrappers.environment_file}"
+    $stdout.puts "   Wrappers path: #{gem_wrappers.wrappers_path}"
+    $stdout.puts "Environment file: #{gem_wrappers.environment_file}"
   end
 
   def execute_unknown(subcommand)
@@ -54,13 +54,13 @@ DOC
   end
 
   def execute_regenerate(list = executables)
-    installer.install(list)
+    gem_wrappers.install(list)
   end
 
 private
 
-  def installer
-    @installer ||= GemWrappers
+  def gem_wrappers
+    @gem_wrappers ||= GemWrappers
   end
 
   def executables

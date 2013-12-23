@@ -1,53 +1,40 @@
 require 'test_helper'
 require 'tempfile'
 require 'gem-wrappers'
+require 'gem-wrappers/fakes'
 
 describe GemWrappers do
+  subject do
+    GemWrappers
+  end
+
   before do
-    file = Tempfile.new('gem_dir')
-    @test_path = file.path
-    file.close
-    file.unlink
+    @fake_installer    = GemWrappers::FakeInstaller.new
+    @fake_envvironment = GemWrappers::FakeEnvironment.new
+    subject.instance_variable_set(:@installer,   @fake_installer)
+    subject.instance_variable_set(:@environment, @fake_envvironment)
   end
 
-  after do
-    FileUtils.rm_rf(@test_path)
+  it "reads configured file" do
+    subject.environment_file.must_equal("/path/to/environment")
   end
 
-  describe "configuration" do
-    it "reads configured file" do
-      Gem.configuration[:wrappers_environment_file] = "/path/to/environment"
-      GemWrappers.environment_file.must_equal("/path/to/environment")
-      Gem.configuration[:wrappers_environment_file] = nil
-    end
-    it "reads configured file" do
-      Gem.configuration[:wrappers_path] = "/path/to/wrappers"
-      GemWrappers.wrappers_path.must_equal("/path/to/wrappers")
-      Gem.configuration[:wrappers_path] = nil
-    end
+  it "reads configured file" do
+    subject.wrappers_path.must_equal("/path/to/wrappers")
   end
 
   it "does create environment and wrapper" do
-    Gem.configuration[:wrappers_path] = File.join(@test_path, "wrappers")
-    Gem.configuration[:wrappers_environment_file] = File.join(@test_path, "environment")
-    Gem.configuration[:wrappers_path_take] = 0
-    GemWrappers.install(%w{rake test})
-    File.exist?(File.join(@test_path, "environment")).must_equal(true)
-    File.exist?(File.join(@test_path, "wrappers", "gem")).must_equal(true)
-    File.exist?(File.join(@test_path, "wrappers", "rake")).must_equal(true)
-    File.exist?(File.join(@test_path, "wrappers", "ruby")).must_equal(true)
-    File.exist?(File.join(@test_path, "wrappers", "test")).must_equal(true)
-    File.exist?(File.join(@test_path, "wrappers", "other")).must_equal(false)
+    subject.install(%w{rake test})
+    @fake_envvironment.ensure?.must_equal(true)
+    @fake_installer.ensure?.must_equal(true)
+    @fake_installer.executables.must_equal(%w{rake test ruby gem erb irb ri rdoc testrb})
   end
 
   it "does remove wrapper" do
-    Gem.configuration[:wrappers_path] = File.join(@test_path, "wrappers")
-    Gem.configuration[:wrappers_environment_file] = File.join(@test_path, "environment")
-    Gem.configuration[:wrappers_path_take] = 0
-    GemWrappers.install(%w{rake})
-    File.exist?(File.join(@test_path, "wrappers", "rake")).must_equal(true)
-    GemWrappers.uninstall(%w{rake})
-    File.exist?(File.join(@test_path, "wrappers", "rake")).must_equal(false)
+    subject.install(%w{rake})
+    @fake_installer.executables.must_equal(%w{rake ruby gem erb irb ri rdoc testrb})
+    subject.uninstall(%w{rake})
+    @fake_installer.executables.must_equal(%w{ruby gem erb irb ri rdoc testrb})
   end
 
 end

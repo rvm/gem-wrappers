@@ -1,20 +1,7 @@
 require 'test_helper'
 require 'tempfile'
 require 'gem-wrappers/command'
-
-class WrappersCommand
-  class FakeInstaller
-    def self.reset
-      @executables = []
-    end
-    def self.install(executables)
-      @executables += executables
-    end
-    def self.executables
-      @executables
-    end
-  end
-end
+require 'gem-wrappers/fakes'
 
 describe WrappersCommand do
   subject do
@@ -22,7 +9,8 @@ describe WrappersCommand do
   end
 
   before do
-    WrappersCommand::FakeInstaller.reset
+    @fake_installer = GemWrappers::Fake.new
+    subject.instance_variable_set(:@gem_wrappers, @fake_installer)
     $stdout = StringIO.new
     $stderr = StringIO.new
   end
@@ -48,14 +36,8 @@ describe WrappersCommand do
   end
 
   it "does show" do
-    Gem.configuration[:wrappers_environment_file] = "/path/to/environment"
-    Gem.configuration[:wrappers_path] = "/path/to/wrappers"
-
     subject.options[:args] = []
     subject.execute
-
-    Gem.configuration[:wrappers_environment_file] = nil
-    Gem.configuration[:wrappers_path] = nil
 
     $stderr.string.must_equal("")
     $stdout.string.must_equal(<<-EXPECTED)
@@ -67,10 +49,9 @@ EXPECTED
 
   it "regenerates wrappers" do
     subject.instance_variable_set(:@executables, %w{rake})
-    subject.instance_variable_set(:@installer, WrappersCommand::FakeInstaller)
     subject.options[:args] = ['regenerate']
     subject.execute
-    WrappersCommand::FakeInstaller.executables.must_equal(%w{rake})
+    @fake_installer.executables.must_equal(%w{rake})
   end
 
   describe "script wrappers" do
@@ -84,18 +65,16 @@ EXPECTED
     end
 
     it "generates script wrapper full path" do
-      subject.instance_variable_set(:@installer, WrappersCommand::FakeInstaller)
       subject.options[:args] = [@file.path]
       subject.execute
-      WrappersCommand::FakeInstaller.executables.must_equal([@file.path])
+      @fake_installer.executables.must_equal([@file.path])
     end
 
     it "generates script wrapper relative" do
       Dir.chdir(File.dirname(@file.path)) do
-        subject.instance_variable_set(:@installer, WrappersCommand::FakeInstaller)
         subject.options[:args] = [File.basename(@file.path)]
         subject.execute
-        WrappersCommand::FakeInstaller.executables.must_equal([@file.path])
+        @fake_installer.executables.must_equal([@file.path])
       end
     end
   end
