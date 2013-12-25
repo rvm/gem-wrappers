@@ -9,6 +9,14 @@
 
 Create gem wrappers for easy use of gems in cron and other system locations.
 
+## Installation
+
+This gem should be available in RVM 1.25+, to install manually:
+
+```bash
+gem install gem-wrappers
+```
+
 ## Configuration / Defaults
 
 In `~/.gemrc` you can overwrite this defaults:
