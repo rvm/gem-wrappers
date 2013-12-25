@@ -11,7 +11,7 @@ Create gem wrappers for easy use of gems in cron and other system locations.
 
 ## Installation
 
-This gem should be available in RVM 1.25+, to install manually:
+This gem should be available in RVM `1.25+`, to install manually:
 
 ```bash
 gem install gem-wrappers
@@ -40,6 +40,27 @@ gem wrappers regenerate
 ```
 
 wrappers will be generated in `$GEM_HOME/wrappers/`.
+
+### Example
+
+Install popular http server `unicorn`:
+
+```bash
+gem install gem-wrappers # assuming it was not installed already
+gem install unicorn
+```
+
+The `unicorn` wrapper is located in `$GEM_HOME/wrappers`:
+
+```bash
+ls `gem env gemhome`/wrappers/unicorn
+```
+
+```ssh
+/home/mpapis/.rvm/gems/ruby-2.1.0-preview2/wrappers/unicorn
+```
+
+This script will make sure proper environment is available.
 
 ## Generating scripts wrappers
 
