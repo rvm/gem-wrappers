@@ -1,6 +1,6 @@
 # Changelog
 
-## next
+## 1.2.3
 date: 2013-12-31
 
 - fix uninstalling gems and add tests for it
