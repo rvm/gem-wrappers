@@ -1,6 +1,6 @@
 # Changelog
 
-## next
+## 1.2.2
 date: 2013-12-31
 
 - improved tests
