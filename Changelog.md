@@ -1,9 +1,10 @@
 # Changelog
 
 ## next
-date: 2013-12-22
+date: 2013-12-31
 
 - improved tests
+- improved code to detect and set executable bits for the created wrapper, fix #3
 
 ## 1.2.1
 date: 2013-12-22

@@ -127,6 +127,7 @@ else
 fi
 EXPECTED
       end
+      File.executable?(full_path).must_equal(true)
     end
 
     it "removes wrapper" do

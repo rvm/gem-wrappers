@@ -36,7 +36,7 @@ module GemWrappers
       File.open(file_name, 'w') do |file|
         file.write(content)
       end
-      File.chmod(0755, file_name)
+      file_set_executable(file_name)
     end
 
     def executable_expanded
@@ -60,6 +60,12 @@ else
   exit 1
 fi
 TEMPLATE
+    end
+
+  private
+    def file_set_executable(file_name)
+      stat = File.stat(file_name)
+      File.chmod(stat.mode|0111, file_name) unless stat.mode&0111 == 0111
     end
 
   end
