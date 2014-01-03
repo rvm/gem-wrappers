@@ -1,5 +1,10 @@
 # Changelog
 
+## next
+date: 2014-01-03
+
+- require fileutils - needed on older rubies
+
 ## 1.2.3
 date: 2013-12-31
 
