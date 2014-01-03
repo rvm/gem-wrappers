@@ -1,6 +1,6 @@
 # Changelog
 
-## next
+## 1.2.4
 date: 2014-01-03
 
 - require fileutils - needed on older rubies
