@@ -33,6 +33,10 @@ module GemWrappers
       raise "Missing environment file for initialize!" unless @environment_file
       @executable = executable
       content = ERB.new(template).result(binding)
+      install_file(executable, content)
+    end
+
+    def install_file(executable, content)
       file_name = File.join(wrappers_path, File.basename(executable))
       File.open(file_name, 'w') do |file|
         file.write(content)
