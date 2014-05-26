@@ -5,8 +5,9 @@ module GemWrappers
   class Installer
     attr_reader :environment_file
 
-    def initialize(environment_file = nil)
+    def initialize(environment_file = nil, executable_format = Gem.default_exec_format)
       @environment_file = environment_file
+      @executable_format = executable_format
     end
 
     def self.wrappers_path
@@ -34,6 +35,16 @@ module GemWrappers
       @executable = executable
       content = ERB.new(template).result(binding)
       install_file(executable, content)
+      install_ty_formatted(executable, content)
+    end
+
+    def install_ty_formatted(executable, content)
+      formated_executble = @executable_format % executable
+      if
+        formated_executble != executable
+      then
+        install_file(formated_executble, content)
+      end
     end
 
     def install_file(executable, content)

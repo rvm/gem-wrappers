@@ -2,6 +2,22 @@ require 'test_helper'
 require 'tempfile'
 require 'gem-wrappers/installer'
 
+def format_content(script_path)
+  <<-EXPECTED
+#!/usr/bin/env bash
+
+if
+  [[ -s "/path/to/environment" ]]
+then
+  source "/path/to/environment"
+  exec #{script_path} "$@"
+else
+  echo "ERROR: Missing RVM environment file: '/path/to/environment'" >&2
+  exit 1
+fi
+EXPECTED
+end
+
 describe GemWrappers::Installer do
   describe "configuration" do
     it "uses default file" do
@@ -57,21 +73,22 @@ describe GemWrappers::Installer do
       subject.ensure
       subject.install("rake")
       File.open(full_path, "r") do |file|
-        file.read.must_equal(<<-EXPECTED)
-#!/usr/bin/env bash
-
-if
-  [[ -s "/path/to/environment" ]]
-then
-  source "/path/to/environment"
-  exec rake "$@"
-else
-  echo "ERROR: Missing RVM environment file: '/path/to/environment'" >&2
-  exit 1
-fi
-EXPECTED
+        file.read.must_equal(format_content('rake'))
       end
     end
+
+    it "creates formated wrapper" do
+      subject.instance_variable_set(:@wrappers_path, @test_path)
+      subject.instance_variable_set(:@executable_format, 'j%s')
+      full_path = File.join(subject.wrappers_path, "jrake")
+      File.exist?(full_path).must_equal(false)
+      subject.ensure
+      subject.install("rake")
+      File.open(full_path, "r") do |file|
+        file.read.must_equal(format_content('rake'))
+      end
+    end
+
 
     it "creates shell script wrapper" do
       subject.instance_variable_set(:@wrappers_path, @test_path)
@@ -85,19 +102,7 @@ EXPECTED
       subject.ensure
       subject.install(script_path)
       File.open(full_path, "r") do |file|
-        file.read.must_equal(<<-EXPECTED)
-#!/usr/bin/env bash
-
-if
-  [[ -s "/path/to/environment" ]]
-then
-  source "/path/to/environment"
-  exec #{script_path} "$@"
-else
-  echo "ERROR: Missing RVM environment file: '/path/to/environment'" >&2
-  exit 1
-fi
-EXPECTED
+        file.read.must_equal(format_content(script_path))
       end
     end
 
@@ -113,19 +118,7 @@ EXPECTED
       subject.ensure
       subject.install(script_path)
       File.open(full_path, "r") do |file|
-        file.read.must_equal(<<-EXPECTED)
-#!/usr/bin/env bash
-
-if
-  [[ -s "/path/to/environment" ]]
-then
-  source "/path/to/environment"
-  exec ruby #{script_path} "$@"
-else
-  echo "ERROR: Missing RVM environment file: '/path/to/environment'" >&2
-  exit 1
-fi
-EXPECTED
+        file.read.must_equal(format_content("ruby #{script_path}"))
       end
       File.executable?(full_path).must_equal(true)
     end
