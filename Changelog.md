@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.5
+date: 2014-05-27
+
+- allow generating formatted binary wrappers, fix #5
+
 ## 1.2.4
 date: 2014-01-03
 
