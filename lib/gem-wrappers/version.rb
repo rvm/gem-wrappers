@@ -1,3 +1,3 @@
 module GemWrappers
-  VERSION = "1.2.6.1"
+  VERSION = "1.2.7"
 end
