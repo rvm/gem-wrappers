@@ -44,6 +44,7 @@ describe WrappersCommand do
 #{subject.description.strip}
    Wrappers path: /path/to/wrappers
 Environment file: /path/to/environment
+     Executables: rake, bundle, bundler
 EXPECTED
   end
 

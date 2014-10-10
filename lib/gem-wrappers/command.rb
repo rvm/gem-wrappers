@@ -45,7 +45,7 @@ DOC
     $stdout.puts description
     $stdout.puts "   Wrappers path: #{gem_wrappers.wrappers_path}"
     $stdout.puts "Environment file: #{gem_wrappers.environment_file}"
-    $stdout.puts "     Executables: #{list}"
+    $stdout.puts "     Executables: #{list.join(", ")}"
   end
 
   def execute_unknown(subcommand)
