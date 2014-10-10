@@ -8,7 +8,7 @@ module GemWrappers
   end
 
   def self.installer
-    @installer ||= GemWrappers::Installer.new(@environment && @environment.file_name)
+    @installer ||= GemWrappers::Installer.new(environment_file)
   end
 
   def self.install(executables)

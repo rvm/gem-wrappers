@@ -41,10 +41,11 @@ DOC
     end
   end
 
-  def execute_show
+  def execute_show(list = executables)
     $stdout.puts description
     $stdout.puts "   Wrappers path: #{gem_wrappers.wrappers_path}"
     $stdout.puts "Environment file: #{gem_wrappers.environment_file}"
+    $stdout.puts "     Executables: #{list}"
   end
 
   def execute_unknown(subcommand)
@@ -54,6 +55,7 @@ DOC
   end
 
   def execute_regenerate(list = executables)
+    execute_show(list) if ENV['GEM_WRAPPERS_DEBUG']
     gem_wrappers.install(list)
   end
 
