@@ -28,12 +28,13 @@ DOC
   end
 
   def execute
-    subcommand = get_one_optional_argument || ''
+    args = options[:args] || []
+    subcommand = args.shift || ''
     case subcommand
-    when ''
-      execute_show
+    when '', 'show'
+      execute_show(args)
     when 'regenerate'
-      execute_regenerate
+      execute_regenerate(args)
     when FileExist
       execute_regenerate([File.expand_path(subcommand)])
     else
@@ -41,7 +42,8 @@ DOC
     end
   end
 
-  def execute_show(list = executables)
+  def execute_show(list = [])
+    list = executables if list.empty?
     $stdout.puts description
     $stdout.puts "   Wrappers path: #{gem_wrappers.wrappers_path}"
     $stdout.puts "Environment file: #{gem_wrappers.environment_file}"
@@ -54,7 +56,8 @@ DOC
     false
   end
 
-  def execute_regenerate(list = executables)
+  def execute_regenerate(list = [])
+    list = executables if list.empty?
     execute_show(list) if ENV['GEM_WRAPPERS_DEBUG']
     gem_wrappers.install(list)
   end

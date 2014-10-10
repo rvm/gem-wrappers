@@ -36,7 +36,7 @@ describe WrappersCommand do
   end
 
   it "does show" do
-    subject.options[:args] = []
+    subject.options[:args] = ["show", "rake"]
     subject.execute
 
     $stderr.string.must_equal("")
@@ -44,7 +44,7 @@ describe WrappersCommand do
 #{subject.description.strip}
    Wrappers path: /path/to/wrappers
 Environment file: /path/to/environment
-     Executables: rake, bundle, bundler
+     Executables: rake
 EXPECTED
   end
 
