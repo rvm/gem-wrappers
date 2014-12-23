@@ -17,7 +17,7 @@ module GemWrappers
     end
 
     def path_take
-      return @path_take if @path_take
+      return @path_take if defined? @path_take
       @path_take = Gem.configuration && Gem.configuration[:wrappers_path_take] || 1
       @path_take += gem_path.size
     end
