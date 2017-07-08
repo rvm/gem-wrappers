@@ -22,7 +22,12 @@ module GemWrappers
     def ensure
       FileUtils.mkdir_p(wrappers_path) unless File.exist?(wrappers_path)
       # exception based on Gem::Installer.generate_bin
-      raise Gem::FilePermissionError.new(wrappers_path) unless File.writable?(wrappers_path)
+      unless File.writable?(wrappers_path)
+        raise Gem::FilePermissionError.new(wrappers_path)
+      end
+      unless @environment_file
+        raise "Missing environment file for initialize!"
+      end
     end
 
     def uninstall(executable)
@@ -31,19 +36,36 @@ module GemWrappers
     end
 
     def install(executable)
-      raise "Missing environment file for initialize!" unless @environment_file
+      target_path = find_executable_path(executable)
+      unless target_path
+        warn "GemWrappers: Can not wrap missing file: #{executable}"
+        return
+      end
+      unless File.executable?(target_path)
+        warn "GemWrappers: Can not wrap not executable file: #{target_path}"
+        return
+      end
       @executable = executable
       content = ERB.new(template).result(binding)
       install_file(executable, content)
-      install_ty_formatted(executable, content)
+      install_to_formatted(executable, content)
     end
 
-    def install_ty_formatted(executable, content)
-      formated_executble = @executable_format % executable
+    def find_executable_path(executable)
+      return executable if File.exist?(executable)
+      ENV['PATH'].split(File::PATH_SEPARATOR).each { |dir|
+        full_path = File.join(dir, executable)
+        return full_path if File.exist?(full_path)
+      }
+      nil
+    end
+
+    def install_to_formatted(executable, content)
+      formatted_executable = @executable_format % executable
       if
-        formated_executble != executable
+        formatted_executable != executable
       then
-        install_file(formated_executble, content)
+        install_file(formatted_executable, content)
       end
     end
 
