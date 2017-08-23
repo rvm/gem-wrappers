@@ -20,8 +20,7 @@ module GemWrappers
       installer.install(executable)
     end
 
-    # ruby executables
-    %w{ruby gem erb irb ri rdoc testrb}.each do |executable|
+    ruby_executables.each do |executable|
       installer.install(executable)
     end
   end
@@ -39,6 +38,14 @@ module GemWrappers
 
   def self.environment_file
     environment.file_name
+  end
+
+  private
+
+  def self.ruby_executables
+    Dir.chdir(RbConfig::CONFIG["bindir"]) {
+      Dir["*"].select{ |file| File.executable?(file) }
+    }
   end
 
 end

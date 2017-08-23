@@ -28,14 +28,16 @@ describe GemWrappers do
       subject.install(%w{rake test})
       @fake_envvironment.ensure?.must_equal(true)
       @fake_installer.ensure?.must_equal(true)
-      @fake_installer.executables.must_equal(%w{rake test ruby gem erb irb ri rdoc testrb})
+      @fake_installer.executables.sort.must_include("rake")
+      @fake_installer.executables.sort.must_include("ruby")
+      @fake_installer.executables.sort.must_include("test")
     end
 
     it "does remove wrapper" do
       subject.install(%w{rake})
-      @fake_installer.executables.must_equal(%w{rake ruby gem erb irb ri rdoc testrb})
+      @fake_installer.executables.must_include("rake")
       subject.uninstall(%w{rake})
-      @fake_installer.executables.must_equal(%w{ruby gem erb irb ri rdoc testrb})
+      @fake_installer.executables.wont_include("rake")
     end
   end
 
