@@ -10,7 +10,7 @@ module GemWrappers
       @executables.delete(executable)
     end
     def executables
-      @executables
+      @executables.uniq
     end
     def ensure
       @ensure = true
