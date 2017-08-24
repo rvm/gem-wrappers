@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.1
+date: 2017-08-24
+
+- detect ruby executables instead of using hardcoded list
+
 ## 1.3.0
 date: 2017-07-08
 
