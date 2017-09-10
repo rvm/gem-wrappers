@@ -75,7 +75,7 @@ EXPECTED
       Dir.chdir(File.dirname(@file.path)) do
         subject.options[:args] = [File.basename(@file.path)]
         subject.execute
-        @fake_installer.executables.must_equal([File.realpath(@file.path)])
+        @fake_installer.executables.must_equal([Pathname.new(@file.path).realpath])
       end
     end
   end
