@@ -43,9 +43,11 @@ module GemWrappers
   private
 
   def self.ruby_executables
-    Dir.chdir(RbConfig::CONFIG["bindir"]) {
-      Dir["*"].select{ |file| File.executable?(file) }
-    }
+    bindir = RbConfig::CONFIG["bindir"].sub(/\/+\z/, '')
+    Dir.entries(bindir).select do |file|
+      path = "#{bindir}/#{file}"
+      !File.directory?(path) && File.executable?(path)
+    end
   end
 
 end
