@@ -17,7 +17,7 @@ describe GemWrappers::Specification do
   end
 
   it "does not find imaginary gems" do
-    GemWrappers::Specification.find("imaginary-gem").must_equal(nil)
+    GemWrappers::Specification.find("imaginary-gem").must_be_nil
   end
 
 end
