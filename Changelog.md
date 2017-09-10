@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.2
+date: 2017-09-10
+
+- Avoid nested chdir warnings #11
+
 ## 1.3.1
 date: 2017-08-24
 
