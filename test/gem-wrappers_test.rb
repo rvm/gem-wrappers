@@ -72,7 +72,7 @@ GEMRC
       FileUtils.rm_rf(@test_path)
     end
 
-    it "installas wrappers" do
+    it "installas wrappers and finds wrapper path" do
       File.exist?(@rake_wrapper).must_equal(false)
       subject.install(%w{rake})
       File.exist?(@rake_wrapper ).must_equal(true)
@@ -86,6 +86,38 @@ GEMRC
       end
       subject.uninstall(%w{rake})
       File.exist?(@rake_wrapper ).must_equal(false)
+    end
+
+    it "finds gem executables" do
+      subject.send(:gems_executables).must_include("rake")
+    end
+
+    it "shows rake in executables" do
+      Dir.mkdir(@wrappers_path)
+      File.open(@rake_wrapper, "w") { |f| f.write("") }
+      File.chmod(0755, @rake_wrapper)
+      subject.installed_wrappers.must_equal(["rake"])
+    end
+
+    it "finds rake path" do
+      Dir.mkdir(@wrappers_path)
+      File.open(@rake_wrapper, "w") { |f| f.write("") }
+      File.chmod(0755, @rake_wrapper)
+      subject.wrapper_path("rake").must_equal(@rake_wrapper)
+    end
+
+    it "doesn't find rake path when not executable" do
+      Dir.mkdir(@wrappers_path)
+      File.open(@rake_wrapper, "w") { |f| f.write("") }
+      proc {
+        subject.wrapper_path("rak2e")
+      }.must_raise(GemWrappers::NoWrapper)
+    end
+
+    it "doesn't find rake path when missing" do
+      proc {
+        subject.wrapper_path("rak2e")
+      }.must_raise(GemWrappers::NoWrapper)
     end
   end
 

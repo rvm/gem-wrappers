@@ -1,5 +1,10 @@
 # Changelog
 
+## next
+
+- add option to show full path to single file
+- list actual list of generated wrappers in show
+
 ## 1.3.2
 date: 2017-09-10
 

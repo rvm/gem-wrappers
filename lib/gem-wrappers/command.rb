@@ -32,7 +32,7 @@ DOC
     subcommand = args.shift || ''
     case subcommand
     when '', 'show'
-      execute_show(args)
+      args.empty? ? execute_show : execute_show_path(args.first)
     when 'regenerate'
       execute_regenerate(args)
     when FileExist
@@ -42,8 +42,12 @@ DOC
     end
   end
 
-  def execute_show(list = [])
-    list = executables if list.empty?
+  def execute_show_path(exe)
+    $stdout.puts gem_wrappers.wrapper_path(exe)
+  end
+
+  def execute_show
+    list = gem_wrappers.installed_wrappers
     $stdout.puts description
     $stdout.puts "   Wrappers path: #{gem_wrappers.wrappers_path}"
     $stdout.puts "Environment file: #{gem_wrappers.environment_file}"
@@ -57,7 +61,7 @@ DOC
   end
 
   def execute_regenerate(list = [])
-    list = executables if list.empty?
+    list = gem_wrappers.gems_executables if list.empty?
     execute_show(list) if ENV['GEM_WRAPPERS_DEBUG']
     gem_wrappers.install(list)
   end
@@ -66,11 +70,6 @@ private
 
   def gem_wrappers
     @gem_wrappers ||= GemWrappers
-  end
-
-  def executables
-    # do not use map(&:...) - for ruby 1.8.6 compatibility
-    @executables ||= GemWrappers::Specification.installed_gems.map{|gem| gem.executables }.inject{|sum, n| sum + n } || []
   end
 end
 
