@@ -34,7 +34,8 @@ module GemWrappers
     end
   end
   class Fake
-    def initialize
+    def initialize(gems)
+      @gems = gems
       @executables = []
     end
     def install(executables)
@@ -51,6 +52,20 @@ module GemWrappers
     end
     def wrappers_path
       "/path/to/wrappers"
+    end
+    def wrapper_path(exe)
+      file = File.join(wrappers_path, exe)
+      if @gems.include?(exe)
+        file
+      else
+        raise GemWrappers::NoWrapper, "No wrapper: #{file}"
+      end
+    end
+    def installed_wrappers
+      @gems
+    end
+    def gems_executables
+      @gems
     end
   end
 end

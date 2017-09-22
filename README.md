@@ -53,7 +53,7 @@ gem install unicorn
 The `unicorn` wrapper is located in `$GEM_HOME/wrappers`:
 
 ```bash
-ls `gem env gemhome`/wrappers/unicorn
+gem wrappers show unicorn
 ```
 
 ```ssh
@@ -91,7 +91,7 @@ export GEM_PATH="<%= gem_path.join(":") %>"
 export GEM_HOME="<%= gem_home %>"
 ```
 
-The path elements are calculated using this algorithm:
+The `path` elements are calculated using this algorithm:
 
 ```ruby
 ENV['PATH'].split(":").take(Gem.path.size + path_take)

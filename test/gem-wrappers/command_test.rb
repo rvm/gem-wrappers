@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'pathname'
 require 'tempfile'
 require 'gem-wrappers/command'
 require 'gem-wrappers/fakes'
@@ -8,9 +9,11 @@ describe WrappersCommand do
     WrappersCommand.new
   end
 
+  let(:gems) { %w[rake ruby] }
+
   before do
-    @fake_installer = GemWrappers::Fake.new
-    subject.instance_variable_set(:@gem_wrappers, @fake_installer)
+    @fake_wrappers = GemWrappers::Fake.new(gems)
+    subject.instance_variable_set(:@gem_wrappers, @fake_wrappers)
     $stdout = StringIO.new
     $stderr = StringIO.new
   end
@@ -36,23 +39,30 @@ describe WrappersCommand do
   end
 
   it "does show" do
+    subject.options[:args] = ["show"]
+    subject.execute
+
+    $stderr.string.must_equal("")
+    $stdout.string.must_match(%r{\
+#{Regexp.escape(subject.description.strip)}
+   Wrappers path: /path/to/wrappers
+Environment file: /path/to/environment
+     Executables: rake, ruby
+})
+  end
+
+  it "does show rake" do
     subject.options[:args] = ["show", "rake"]
     subject.execute
 
     $stderr.string.must_equal("")
-    $stdout.string.must_equal(<<-EXPECTED)
-#{subject.description.strip}
-   Wrappers path: /path/to/wrappers
-Environment file: /path/to/environment
-     Executables: rake
-EXPECTED
+    $stdout.string.must_equal("/path/to/wrappers/rake\n")
   end
 
   it "regenerates wrappers" do
-    subject.instance_variable_set(:@executables, %w{rake})
-    subject.options[:args] = ['regenerate']
+    subject.options[:args] = %w{regenerate rake}
     subject.execute
-    @fake_installer.executables.must_equal(%w{rake})
+    @fake_wrappers.executables.must_equal(%w{rake})
   end
 
   describe "script wrappers" do
@@ -68,20 +78,15 @@ EXPECTED
     it "generates script wrapper full path" do
       subject.options[:args] = [@file.path]
       subject.execute
-      @fake_installer.executables.must_equal([@file.path])
+      @fake_wrappers.executables.must_equal([@file.path])
     end
 
     it "generates script wrapper relative" do
       Dir.chdir(File.dirname(@file.path)) do
         subject.options[:args] = [File.basename(@file.path)]
         subject.execute
-        @fake_installer.executables.must_equal([Pathname.new(@file.path).realpath.to_s])
+        @fake_wrappers.executables.must_equal([Pathname.new(@file.path).realpath.to_s])
       end
     end
   end
-
-  it "finds gem executables" do
-    subject.send(:executables).must_include('rake')
-  end
-
 end
